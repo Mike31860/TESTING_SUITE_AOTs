@@ -2,7 +2,7 @@
 
 Our test suite drew from three distinct benchmarks: **NPB v3.3**, **PB Suite V4.2**, and the **PCB Benchmark**. For our experiments, we measured the performance of the applications using input **Class B** for the NPB and the **LARGE_DATASET** for the PB and PCB suites.
 
-![Test Suite Image](image.png/image.png)
+![Test Suite Image](./image.png)
 
 Recall that we are focusing on challenge patterns for optimizing compilers. We have selected specific subroutines from the NPB and PB suites that contain such cases, resulting in a total of **16 experimental sections**. For the PCB, we developed **28 use cases**, each representing one of the six challenge scenarios. In total, our testing dataset contains **44 experimental sections**. 
 
