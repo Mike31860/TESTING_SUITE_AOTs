@@ -40,79 +40,30 @@ These patterns often represent significant computation tasks. As observed in Fig
 
 Example: Parallelizing the Outermost Loop Pattern
 
-c
-Copy code
-// Outermost Loop Parallelization
-1: int sum;
-2: for (int i = 0; i < size; ++i) {
-3:   for (int j = 0; j < size; ++j) {
-4:      for (int k = 0; k < size; ++k) {
-5:       #pragma omp parallel for
-6:       for (int l = 0; l < size; ++l) {  
-7:         int position = i * size + j * size; 
-8:         int index = position + k * size + l;
-9:         sum += data[indices[index]];
-10:        }
-11:     }
-12:   }
-13: }
-Figure 3: Parallelizing the outermost loop pattern in an example loop from the PCB v1.0. Compilers tend to parallelize the inner-most loop due to the irregular data accesses represented in code line #9. Doing so incurs the overhead of starting the parallel region ijk*. Parallelizing the outermost loop would eliminate this overhead.*
+![Test Suite Image](./images/PO.png)
+
 
 ## Parallelizing Loops with Function Calls (PF)
 Loops with function calls (PF) present additional challenges due to the lack of interprocedural analysis in many compilers. For side-effect-free functions that modify only their parameters, parallelization becomes feasible if variable independence is confirmed.
 
 Example: Parallelizing Function Calls Pattern
 
-c
-Copy code
-// Parallelizing Function Calls
-1: int size = 1000;
-2: int result[size][size];
-3: for (int i = 0; i < size; i++) {
-4:    for (int j = 0; j < size; j++) {
-5:        for (int k = 0; k < size; k++){
-6:           /* Side effect free function call */  
-7:           result[i][j][k] = compute(i, j, k);
-8:         }
-9:    }
-10: }
-Figure 4: Parallelizing Loops with Function Calls pattern in an example loop from the PCB v1.0. The function compute is side-effect free. The loop in line #3 can be parallelized.
+![Test Suite Image](./images/PF.png)
+
 
 ## Parallel Regions Enclosing Multiple Parallel Loops (PR)
 Optimizing compilers often parallelize loops individually, missing opportunities to optimize across multiple loops within a parallel region. Enclosing several loops within a single Parallel Region (PR) reduces the overhead of repeatedly starting and ending parallel loops.
 
 Example: Parallel Regions Enclosing Multiple Parallel Loops Pattern
 
-c
-Copy code
-4:   #pragma omp parallel
-5: {
-6:    #pragma omp parallel for   
-7:    for (int i = 0; i < NUM_ELEMENTS; i++) {
-8:        result[i] = array[i] * 2;
-9:    }         
-10:    #pragma omp parallel for   
-11:    for (int i = 0; i < NUM_ELEMENTS; i++) {
-12:       result[i] *= result[i];
-13:    }
-14: }
-Figure 5: Parallel Regions Enclosing Multiple Parallel Loops pattern in an example from the PCB v1.0. The parallel region reduces the Fork/join overhead caused by parallelizing each loop individually.
+![Test Suite Image](./images/PR.png)
 
 ## Parallelizing Array Reductions (PA)
 Parallelizing Array Reductions (PA) performs operations, such as sum, product, min, or max, on elements of an array. Parallelizing these operations requires careful consideration of data dependencies and synchronization to ensure correct results while maximizing parallel execution. Algorithms to perform reductions in parallel are well known PE95, but applying them correctly and beneficially when the result is an array itself can be non-trivial Prema et al., 2017.
 
 Example: Parallelizing Array Reduction Pattern
 
-c
-Copy code
-1:  #pragma omp parallel for reduction(+:result)
-2:  for (i = 0; i < ARRAY_SIZE; i++) {
-3:       for (j = 0; j < INNER_SIZE; j++) {
-4:          result[j] += array[i][j];
-5:       }  
-6:    }
-7:
-Figure 6: Parallelizing Array Reduction pattern in an example from the PCB v1.0. Most compilers can recognize scalar reductions. The analysis is more difficult if the reduction variable is an array, as result[] in this example.
+![Test Suite Image](./images/PA.png)
 
 References
 Barakhshan, et al. (2023). Learning Optimizations for Compilers. Link
