@@ -12,7 +12,7 @@ Recall that we are focusing on challenge patterns for optimizing compilers. We h
 |-----------|---------------|-------------------|-----------------------|
 | NPB       | v3.3          | Class B           | 12                    |
 | PB        | V4.2          | LARGE_DATASET     | 4                    |
-| PCB       | -             | LARGE_DATASET     | 28                    |
+| PCB       | v1.0          | LARGE_DATASET     | 28                    |
 | **Total** |               |                   | **44**                |
 
 *Table 2: Overview of the Test Suite*
